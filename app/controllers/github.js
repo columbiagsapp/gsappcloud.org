@@ -53,6 +53,7 @@ exports.getRepo = function(repoName, callback){
 
 
 exports.getRepos = function(callback){
+    var returned = false;//flag set true once callback called
 
 	github.repos.getFromOrg({
     		org: "columbiagsapp"
@@ -81,11 +82,6 @@ exports.getRepos = function(callback){
                         }else{
                             callback_array.push( repos_array[r] );
 
-                            console.log('\n\n\n\n***************');
-                            console.log('count: ' + count);
-                            console.log('repo with cloudinfo.json file: '+ callback_array[callback_array.length-1].name);
-                            console.log('***************\n\n\n\n');
-
                             //convert cloudinfo.content base64 encoded into string
                             var cloudinfo_json = new Buffer(cloudinfo.content, 'base64').toString();
                             cloudinfo_json = JSON.parse(cloudinfo_json);//convert to JSON object
@@ -95,9 +91,8 @@ exports.getRepos = function(callback){
                         }
                         count++;
 
-                        console.log('count: ' + count);
-                        console.log('callback_array.length: '+ callback_array.length + '\n\n');
                         if(count >= repos_count){
+                            returned = true;
                             callback(null, callback_array);
                         }
                     });
@@ -106,6 +101,14 @@ exports.getRepos = function(callback){
 
                     
             }//end for all repos
+
+            //if doesn't return after 15s, send error
+            setTimeout(function(){
+                if(returned == false){
+                    callback("Github API error: repo timeout");
+                }
+            }, 15000);
+
 
         }//end if no err
 
