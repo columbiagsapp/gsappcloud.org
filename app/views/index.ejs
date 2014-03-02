@@ -11,15 +11,22 @@
 
 	<div id="main">
 		<ul id="repos">
-			
-			<% for(var i=0; i < repos.length; i++) {%>
-   				<li class="repo">
-					<a href="https://github.com/columbiagsapp/<%= repos[i].name %>" target="_blank">
-						<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/screenshot.png" >
-						<%= repos[i].name %>
-					</a>
-				</li>
-			<% } %>			
+			<% if (err != null) { %>
+				<%= err %>
+			<% }else{ %>
+				<% for(var i=0; i < repos.length; i++) {%>
+	   				<li class="repo">
+						<a href="https://github.com/columbiagsapp/<%= repos[i].name %>" target="_blank">
+							<% if (repos[i].cloudinfo != null) { %>
+								<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/<%= repos[i].cloudinfo.thumbnail %>" >
+							<% }else{ %>
+								<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/screenshot.png" >
+							<% } %>	
+							<%= repos[i].name %>
+						</a>
+					</li>
+				<% } %>	
+			<% } %>		
 
 		</ul>
 
