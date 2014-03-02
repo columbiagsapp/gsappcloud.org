@@ -57,14 +57,19 @@ exports.getRepos = function(callback){
 	github.repos.getFromOrg({
     		org: "columbiagsapp"
 	}, function(err, repos_array) {
-        var cloudinfo_count = 0;
+        var count = 0;
+        var repos_count = repos_array.length;
 
         if(err){
             callback("Github API error: get repositories from organization");
         }else{
 
+            console.log('\n\n\n\nTHIS IS THE repos_array.length: '+ repos_array.length + '\n\n\n\n');
+            var callback_array = [];
+
        		for(var r = 0; r < repos_array.length; r++){
                 (function(r) {
+
                     github.repos.getContent({
                         user: "columbiagsapp",               
                         repo: repos_array[r].name,
@@ -72,24 +77,28 @@ exports.getRepos = function(callback){
 
                     }, function(err, cloudinfo){
                         if(err){
-                            cloudinfo_count++;
-
-                            
+                            //if no cloudinfo.json file, do nothing
                         }else{
+                            callback_array.push( repos_array[r] );
+
+                            console.log('\n\n\n\n***************');
+                            console.log('count: ' + count);
+                            console.log('repo with cloudinfo.json file: '+ callback_array[callback_array.length-1].name);
+                            console.log('***************\n\n\n\n');
 
                             //convert cloudinfo.content base64 encoded into string
                             var cloudinfo_json = new Buffer(cloudinfo.content, 'base64').toString();
                             cloudinfo_json = JSON.parse(cloudinfo_json);//convert to JSON object
-                            
-                            if(repos_array[r].name == "events.gsapp.org"){
-                                console.dir(cloudinfo_json);
-                            }
 
-                            repos_array[r].cloudinfo = cloudinfo_json;//add cloudinfo attribute to repo
-                            cloudinfo_count++;
+                            //add cloudinfo attribute to repo
+                            callback_array[callback_array.length-1].cloudinfo = cloudinfo_json;
                         }
-                        if(cloudinfo_count >= repos_array.length){
-                            callback(null, repos_array);
+                        count++;
+
+                        console.log('count: ' + count);
+                        console.log('callback_array.length: '+ callback_array.length + '\n\n');
+                        if(count >= repos_count){
+                            callback(null, callback_array);
                         }
                     });
 
