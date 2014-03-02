@@ -1,0 +1,22 @@
+body {
+  font: 14px Monaco, monospace;
+  text-align: center;
+}
+a {
+  color: black;
+  text-decoration: none;
+}
+#main {
+  padding: 3%;
+}
+li {
+  list-style: none;
+}
+.repo {
+  width: 40%;
+  text-align: center;
+  margin: 20px auto;
+}
+.repo img {
+  width: 100%;
+}

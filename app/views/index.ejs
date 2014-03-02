@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+
+	<div id="main">
+		<ul id="repos">
+			
+			<% for(var i=0; i < repos.length; i++) {%>
+   				<li class="repo">
+					<a href="https://github.com/columbiagsapp/<%= repos[i].name %>" target="_blank">
+						<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/screenshot.png" >
+						<%= repos[i].name %>
+					</a>
+				</li>
+			<% } %>			
+
+		</ul>
+
+	</div>
+
+
+  </body>
+</html>
