@@ -1,4 +1,7 @@
 var GitHubApi = require("github");
+var markdown = require("markdown").markdown;
+
+console.log( markdown.toHTML( "Hello *World*!" ) );
 
 var github = new GitHubApi({
     // required
@@ -16,56 +19,88 @@ github.authenticate({
     type: "oauth",
     key: "64be49db1055afb28914",
     secret: "a7b513953467c7db28f05b8722724d355b2647c2"
-})
+});
+
+/*
+exports.getRepo = function(repoName, callback){
+    
+
+    github.repos.getReadme({
+        user: "columbiagsapp",               
+        repo: repoName,   
+
+    }, function(err, readme){
+        if(err){
+            callback("Github API error: get readme");
+        }else{
+            console.log('\n\n\nreadme for repo: ' + current_repo.name);
+            
+            //convert cloudinfo.content base64 encoded into string
+            var readme_json = new Buffer(readme.content, 'base64').toString();
+            readme_json = JSON.parse(readme_json);//convert to JSON object
+            
+            console.dir(readme_json);
+
+            current_repo.readme = readme_json;//add cloudinfo attribute to repo
+            cloudinfo_count++;
+        }
+        if(cloudinfo_count >= repos_array.length){
+            callback(null, repos_array);
+        }
+    });
+}
+*/
 
 
 exports.getRepos = function(callback){
 
 	github.repos.getFromOrg({
     		org: "columbiagsapp"
-	}, function(err, repos) {
+	}, function(err, repos_array) {
         var cloudinfo_count = 0;
-        var repos_array = repos;
 
         if(err){
             callback("Github API error: get repositories from organization");
         }else{
 
-       		for(var r = 0; r < repos.length; r++){
-                var current_repo = repos[r];
-    			console.log(current_repo.name);
-    			
-    			github.repos.getContent({
-            		user: "columbiagsapp",               
-            		repo: current_repo.name,
-            		path: "cloudinfo.json",     
+       		for(var r = 0; r < repos_array.length; r++){
+                (function(r) {
+                    github.repos.getContent({
+                        user: "columbiagsapp",               
+                        repo: repos_array[r].name,
+                        path: "cloudinfo.json",     
 
-        		}, function(err, cloudinfo){
-                    if(err){
-                        cloudinfo_count++;
-                    }else{
-        			    console.log('\n\n\ncloudinfo for repo: ' + current_repo.name);
-        			    
-                        //convert cloudinfo.content base64 encoded into string
-                        var cloudinfo_json = new Buffer(cloudinfo.content, 'base64').toString();
-                        cloudinfo_json = JSON.parse(cloudinfo_json);//convert to JSON object
-                        
-                        console.dir(cloudinfo_json);
+                    }, function(err, cloudinfo){
+                        if(err){
+                            cloudinfo_count++;
 
-                        current_repo.cloudinfo = cloudinfo;//add cloudinfo attribute to repo
-                        cloudinfo_count++;
-                    }
-                    if(cloudinfo_count >= repos_array.length){
-                        callback(null, repos_array);
-                    }
-        		});
+                            
+                        }else{
+
+                            //convert cloudinfo.content base64 encoded into string
+                            var cloudinfo_json = new Buffer(cloudinfo.content, 'base64').toString();
+                            cloudinfo_json = JSON.parse(cloudinfo_json);//convert to JSON object
+                            
+                            if(repos_array[r].name == "events.gsapp.org"){
+                                console.dir(cloudinfo_json);
+                            }
+
+                            repos_array[r].cloudinfo = cloudinfo_json;//add cloudinfo attribute to repo
+                            cloudinfo_count++;
+                        }
+                        if(cloudinfo_count >= repos_array.length){
+                            callback(null, repos_array);
+                        }
+                    });
+
+                })(r);
+
+                    
             }//end for all repos
 
         }//end if no err
 
 	});
 
-
-	console.log('\n\nshould have started\n\n');
 
 }//end export getRepos
