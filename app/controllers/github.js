@@ -11,55 +11,61 @@ var github = new GitHubApi({
     timeout: 5000
 });
 
+// OAuth2 Key/Secret
+github.authenticate({
+    type: "oauth",
+    key: "64be49db1055afb28914",
+    secret: "a7b513953467c7db28f05b8722724d355b2647c2"
+})
 
-exports.repos = function(callback){
+
+exports.getRepos = function(callback){
 
 	github.repos.getFromOrg({
-    		// optional:
-    		// headers: {
-    		//     "cookie": "blahblah"
-    		// },
     		org: "columbiagsapp"
-	}, function(err, res) {
-		console.log('res!!!!!!!:');
-		console.dir(res);
-		
-		callback(res);		
-/*
-   		res.forEach(function(r){
-			console.log(r.name);
-			if(r.name == "Paris-Atelier"){
-			console.log("Paris-Atelier!!!!!!!");
-			
+	}, function(err, repos) {
+        var cloudinfo_count = 0;
+        var repos_array = repos;
 
-			github.repos.getContent({
-                		user: "columbiagsapp",               
-                		repo: r.name,
-                		path: "screenshot.png",                  
+        if(err){
+            callback("Github API error: get repositories from organization");
+        }else{
 
-        		}, function(err, res){
-				console.log('\n\ngot a response!!!!!!!\n\n');
-				
-				console.dir(res);
+       		for(var r = 0; r < repos.length; r++){
+                var current_repo = repos[r];
+    			console.log(current_repo.name);
+    			
+    			github.repos.getContent({
+            		user: "columbiagsapp",               
+            		repo: current_repo.name,
+            		path: "cloudinfo.json",     
 
-                		res.forEach(function(r){
-                        		console.log("\n\ngot a screenshot.png content:");
-                        		console.log(r);
-               			});
+        		}, function(err, cloudinfo){
+                    if(err){
+                        cloudinfo_count++;
+                    }else{
+        			    console.log('\n\n\ncloudinfo for repo: ' + current_repo.name);
+        			    
+                        //convert cloudinfo.content base64 encoded into string
+                        var cloudinfo_json = new Buffer(cloudinfo.content, 'base64').toString();
+                        cloudinfo_json = JSON.parse(cloudinfo_json);//convert to JSON object
+                        
+                        console.dir(cloudinfo_json);
+
+                        current_repo.cloudinfo = cloudinfo;//add cloudinfo attribute to repo
+                        cloudinfo_count++;
+                    }
+                    if(cloudinfo_count >= repos_array.length){
+                        callback(null, repos_array);
+                    }
         		});
+            }//end for all repos
 
+        }//end if no err
 
-			
-			}//end if paris atelier
-
-
-    		});
-*/
-
-    		//console.log(JSON.stringify(res));
 	});
 
 
 	console.log('\n\nshould have started\n\n');
 
-}//end export repos
+}//end export getRepos
