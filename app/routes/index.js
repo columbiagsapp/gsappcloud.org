@@ -10,16 +10,15 @@ exports.index = function(req, res){
 
 exports.repo = function(req, res){
 
-	console.dir(req);
+	var repoName = req.params.repo;
 
-	var repoName = "gsapp.events.org";
-
-  	githubAPI.getRepo(repoName, function(err, content){
+  	githubAPI.getRepo(repoName, function(err, content, url){
 		res.render('repo', { 
 			title: 'GSAPP Cloud Communications',
 			err: err,
 			name: repoName,
-			content: content
+			content: content,
+			url: url
 		});
 	});
 

@@ -5,7 +5,7 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
+    <h1><a href="/" target="_self"><%= title %></a></h1>
     <p>Welcome to <%= title %></p>
 
 
@@ -16,7 +16,7 @@
 			<% }else{ %>
 				<% for(var i=0; i < repos.length; i++) {%>
 	   				<li class="repo">
-						<a href="https://github.com/columbiagsapp/<%= repos[i].name %>" target="_blank">
+						<a href="/repo/<%= repos[i].name %>" target="_self">
 							<% if (repos[i].cloudinfo != null) { %>
 								<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/<%= repos[i].cloudinfo.thumbnail %>" >
 							<% }else{ %>

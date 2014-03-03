@@ -5,13 +5,16 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p><%= name %></p>
+    <h1><a href="/" target="_self"><%= title %></a></h1>
+    <a href="https://github.com/columbiagsapp/<%= name %>" target="_blank"><%= name %> Github repository →</a>
+    <br>
+    <a href="<%= url %>" target="_blank">Visit live site</a>
 
 
 	<div id="main">
-		<%= content %>
-
+    <div id="repo_container">
+  		<%- content %>
+    </div>
 	</div>
 
 

@@ -21,9 +21,12 @@ github.authenticate({
     secret: "a7b513953467c7db28f05b8722724d355b2647c2"
 });
 
-/*
+
 exports.getRepo = function(repoName, callback){
-    
+
+    console.log('\n\n\n\n\n*******************');
+    console.log('entering getRepo()');
+    console.log('*******************\n\n\n\n\n');
 
     github.repos.getReadme({
         user: "columbiagsapp",               
@@ -33,30 +36,52 @@ exports.getRepo = function(repoName, callback){
         if(err){
             callback("Github API error: get readme");
         }else{
-            console.log('\n\n\nreadme for repo: ' + current_repo.name);
+            console.log('\n\n\nreadme for repo: ' + repoName);
             
             //convert cloudinfo.content base64 encoded into string
-            var readme_json = new Buffer(readme.content, 'base64').toString();
-            readme_json = JSON.parse(readme_json);//convert to JSON object
+            var readme_md = new Buffer(readme.content, 'base64').toString();
             
-            console.dir(readme_json);
+            console.dir(readme_md);
 
-            current_repo.readme = readme_json;//add cloudinfo attribute to repo
-            cloudinfo_count++;
-        }
-        if(cloudinfo_count >= repos_array.length){
-            callback(null, repos_array);
+            var readme_html = markdown.toHTML( readme_md );
+
+
+            //get the cloudinfo.json file to
+            //return other metadata
+            github.repos.getContent({
+                user: "columbiagsapp",               
+                repo: repoName,
+                path: "cloudinfo.json",     
+
+            }, function(err, cloudinfo){
+                if(err){
+                    //if no cloudinfo.json file, callback without a url
+                    callback(null, readme_html);
+                }else{
+                    
+
+                    //convert cloudinfo.content base64 encoded into string
+                    var cloudinfo_json = new Buffer(cloudinfo.content, 'base64').toString();
+                    cloudinfo_json = JSON.parse(cloudinfo_json);//convert to JSON object
+
+                    console.log('\n\n\n\n\n\n\nURL: ' + cloudinfo_json.url);
+
+                    callback(null, readme_html, cloudinfo_json.url);
+                }
+            });
         }
     });
+
 }
-*/
+
 
 
 exports.getRepos = function(callback){
     var returned = false;//flag set true once callback called
 
 	github.repos.getFromOrg({
-    		org: "columbiagsapp"
+    		org: "columbiagsapp",
+            per_page: "10000"
 	}, function(err, repos_array) {
         var count = 0;
         var repos_count = repos_array.length;
@@ -96,9 +121,7 @@ exports.getRepos = function(callback){
                             callback(null, callback_array);
                         }
                     });
-
-                })(r);
-
+                })(r);//end of anonymous function
                     
             }//end for all repos
 
@@ -108,7 +131,6 @@ exports.getRepos = function(callback){
                     callback("Github API error: repo timeout");
                 }
             }, 15000);
-
 
         }//end if no err
 
