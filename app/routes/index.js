@@ -35,7 +35,7 @@ exports.addRepo = function(req, res){
 
 	console.dir(req);
 
-	var name = req.params.repo; 
+	var name = req.body.name; 
 
 	githubAPI.addRepo(res, name, function(err, message){
 		if(err){
