@@ -3,22 +3,21 @@
   <head>
     <title><%= title %></title>
 	<link rel='stylesheet' href='/stylesheets/style.css' />
-	<script type="text/javascript">
-			console.log($(document));
-	</script>
-  </head>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/js/cloud.js"></script>
+ </head>
   <body>
     <h1><a href="/" target="_self"><%= title %></a></h1>
     <p>Columbia University Graduate School of Architecture, Planning and Preservation</p>
 
 
 	<div id="main">
-		<div id="repos">
+		<div id="grid-repos">
 			<% if (err != null) { %>
 				<%= err %>
 			<% }else{ %>
 				<% for(var i=0; i < repos.length; i++) {%>
-					<div class="repo">
+					<div class="repo" id="<%= repos[i].id %>">
 						<a href="#<%= repos[i].name %>">
 							<div class="overlay">
 								<div class="screenshot">
@@ -31,7 +30,6 @@
 							</div>
 							<div class="repo_inner">
 								<div class="name"><%= repos[i].name %></div>
-									<!--		<%= JSON.stringify(repos[i]) %> -->
 									<div class="description"><%= repos[i].description %></div>
 								<!-- <div class="stars"><%= repos[i].stars %></div>
 								<div class="forks"><%= repos[i].forks %></div> -->
@@ -39,7 +37,7 @@
 									<div class="downloads"><span class="label">&darr;</span>10,327</div>
 									<div class="stars"><span class="label">&#9733;</span>33</div>
 									<div class="forks"><span class="label">&#8596;</span>3</div>
-								<div>
+								</div>
 							</div>
 						</a>
 					</div>
@@ -49,6 +47,43 @@
 		</div>
 
 	</div>
+
+
+
+	<div id="overlay-repos">
+		<% if (err != null) { %>
+			<%= err %>
+		<% }else{ %>
+			<% for(var i=0; i < repos.length; i++) {%>
+				<div class="repo" id="<%= repos[i].id %>">
+					<a href="#<%= repos[i].name %>">
+						<div class="screenshot">
+								<% if (repos[i].cloudinfo != null) { %>
+									<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/<%= repos[i].cloudinfo.thumbnail %>" >
+								<% }else{ %>
+									<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/screenshot.png" >
+								<% } %>	
+						</div>
+						<div class="repo_inner">
+							<div class="name"><%= repos[i].name %></div>
+								<div class="description"><%= repos[i].description %></div>
+							<!-- <div class="stars"><%= repos[i].stars %></div>
+							<div class="forks"><%= repos[i].forks %></div> -->
+							<div class="stats">
+								<div class="downloads"><span class="label">&darr;</span>10,327</div>
+								<div class="stars"><span class="label">&#9733;</span>33</div>
+								<div class="forks"><span class="label">&#8596;</span>3</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			<% } %>	
+		<% } %>		
+
+	</div>
+
+
+
 
 
   </body>
