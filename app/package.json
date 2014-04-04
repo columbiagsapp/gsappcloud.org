@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "gsappcloud.org",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
     "express": "3.2.0",
     "ejs": "*",
     "less-middleware": "*",
-    "github": "*"
+    "github": "*",
+    "markdown": "*"
   }
 }

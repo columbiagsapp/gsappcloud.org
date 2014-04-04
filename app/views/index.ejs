@@ -5,21 +5,28 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <h1><a href="/" target="_self"><%= title %></a></h1>
+    <p>Columbia University Graduate School of Architecture, Planning and Preservation</p>
 
 
 	<div id="main">
 		<ul id="repos">
-			
-			<% for(var i=0; i < repos.length; i++) {%>
-   				<li class="repo">
-					<a href="https://github.com/columbiagsapp/<%= repos[i].name %>" target="_blank">
-						<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/screenshot.png" >
-						<%= repos[i].name %>
-					</a>
-				</li>
-			<% } %>			
+			<% if (err != null) { %>
+				<%= err %>
+			<% }else{ %>
+				<% for(var i=0; i < repos.length; i++) {%>
+	   				<li class="repo">
+						<a href="/repo/<%= repos[i].name %>" target="_self">
+							<% if (repos[i].cloudinfo != null) { %>
+								<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/<%= repos[i].cloudinfo.thumbnail %>" >
+							<% }else{ %>
+								<img class="repo_thumb" src="https://raw.github.com/columbiagsapp/<%= repos[i].name %>/master/screenshot.png" >
+							<% } %>	
+							<%= repos[i].name %>
+						</a>
+					</li>
+				<% } %>	
+			<% } %>		
 
 		</ul>
 
