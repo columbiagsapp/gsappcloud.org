@@ -24,3 +24,26 @@ exports.repo = function(req, res){
 
 };
 
+
+exports.submit = function(req, res){
+
+	res.render('submit', { title: 'Submit a repo name' });
+
+}
+
+exports.addRepo = function(req, res){
+
+	console.dir(req);
+
+	var name = req.params.repo; 
+
+	githubAPI.addRepo(res, name, function(err, message){
+		if(err){
+			res.send('500', 'Server error trying to add repo: ' + message);
+		}else{
+			res.send('200', message);
+		}
+	});
+
+}
+
