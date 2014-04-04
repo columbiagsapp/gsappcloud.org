@@ -33,7 +33,7 @@ if ('development' == app.get('env')) {
 app.get('/repo/:repo', routes.repo);
 app.get('/', routes.index);
 
-app.get('/repo/submit', routes.submitRepo);
+app.get('/repo/submit', routes.submit);
 
 app.post('/repo/add', routes.addRepo);
 
