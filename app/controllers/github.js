@@ -3,7 +3,7 @@ var markdown = require("markdown").markdown;
 
 
 var mongoose = require('mongoose'),
-    Repo = mongoose.model('Repo'),
+    Repo = require('../models/repo'),
     _ = require('lodash');
 
 
