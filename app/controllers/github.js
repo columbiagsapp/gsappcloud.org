@@ -1,6 +1,35 @@
 var GitHubApi = require("github");
 var markdown = require("markdown").markdown;
 
+
+var mongoose = require('mongoose'),
+    Repo = mongoose.model('Repo'),
+    _ = require('lodash');
+
+
+// Add new repo to database
+exports.addRepo = function(res, name, callback){
+    var repo = new Repo();
+    repo.name = name;
+    repo.downloads = 0;
+    repo.added_time = new Date().getTime();
+
+    repo.save(function(err) {
+        if (err) {
+            console.log('error attempting to save new repo');
+
+            callback('error attempting to save new repo');
+        } else {
+            console.log('added new repo to database');
+
+            callback(null, 'Successfully added repository');
+        }
+    });
+
+};
+
+
+
 console.log( markdown.toHTML( "Hello *World*!" ) );
 
 var github = new GitHubApi({
