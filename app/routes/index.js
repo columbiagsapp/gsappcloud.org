@@ -33,11 +33,9 @@ exports.submit = function(req, res){
 
 exports.addRepo = function(req, res){
 
-	console.dir(req);
+	//need to add verification to make sure the repo exists and is public
 
-	var name = req.body.name; 
-
-	githubAPI.addRepo(res, name, function(err, message){
+	githubAPI.addRepo(req, res, function(err, message){
 		if(err){
 			res.send('500', 'Server error trying to add repo: ' + message);
 		}else{

@@ -10,10 +10,13 @@
 
 
 	<div id="main">
-		<form id="loginformA" action="userlogin" method="post">
+		<form id="submitrepo" action="submit" method="post">
 			<div>
+				<label for="repo">Username: </label>
+				<input type="text" id="username" name="username"></input>
+
 				<label for="repo">Repo: </label>
-				<input type="text" id="repo" name="name"></input>
+				<input type="text" id="reponame" name="reponame"></input>
 			</div>
 			<input type="submit" value="Submit"></input>
 		</form>

@@ -4,10 +4,15 @@
  */
 
 var express = require('express')
+  , mongoStore = require('connect-mongo')(express)
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path');
+
+// Bootstrap db connection
+var mongoose = require('mongoose');
+var db = mongoose.connect('mongodb://localhost/pacdb');
 
 var app = express();
 
@@ -30,12 +35,16 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+
+
+
+
 app.get('/repo/:repo', routes.repo);
 app.get('/', routes.index);
 
-app.get('/repo/submit', routes.submit);
+app.get('/submit', routes.submit);
 
-app.post('/repo/add', routes.addRepo);
+app.post('/submit', routes.addRepo);
 
 app.get('/users', user.list);
 

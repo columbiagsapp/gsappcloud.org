@@ -14,7 +14,12 @@ var RepoSchema = new Schema({
         default: '',
         trim: false
     },
-    name: {
+    reponame: {
+        type: String,
+        default: '',
+        trim: false
+    },
+    username: {
         type: String,
         default: '',
         trim: false
@@ -28,8 +33,8 @@ var RepoSchema = new Schema({
 /**
  * Validations
  */
-RepoSchema.path('name').validate(function(name) {
-    return name.length;
+RepoSchema.path('reponame').validate(function(reponame) {
+    return reponame.length;
 }, 'Repo name cannot be blank');
 
 

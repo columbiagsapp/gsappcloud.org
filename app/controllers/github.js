@@ -1,18 +1,26 @@
+require('../models/repo');//invoke it?
+
 var GitHubApi = require("github");
 var markdown = require("markdown").markdown;
 
 
 var mongoose = require('mongoose'),
-    Repo = require('../models/repo'),
+    Repo = mongoose.model('Repo'),
     _ = require('lodash');
 
 
 // Add new repo to database
-exports.addRepo = function(res, name, callback){
+exports.addRepo = function(req, res, callback){
+    console.log('controllers/github.js::addRepo');
+
     var repo = new Repo();
-    repo.name = name;
+    repo.reponame = req.body.reponame;
+    repo.username = req.body.username;
     repo.downloads = 0;
     repo.added_time = new Date().getTime();
+
+    console.log('new repo to save: ');
+    console.dir(repo);
 
     repo.save(function(err) {
         if (err) {
@@ -53,9 +61,7 @@ github.authenticate({
 
 exports.getRepo = function(repoName, callback){
 
-    console.log('\n\n\n\n\n*******************');
-    console.log('entering getRepo()');
-    console.log('*******************\n\n\n\n\n');
+    
 
     github.repos.getReadme({
         user: "columbiagsapp",               
