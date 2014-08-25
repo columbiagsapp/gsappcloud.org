@@ -18,7 +18,7 @@
 			<% }else{ %>
 				<% for(var i=0; i < repos.length; i++) {%>
 					<div class="repo" id="<%= repos[i].id %>">
-						<a href="#<%= repos[i].name %>">
+						<a href="/repo/<%= repos[i].name %>">
 							<div class="overlay">
 								<div class="screenshot">
 									<% if (repos[i].cloudinfo != null) { %>
@@ -33,7 +33,7 @@
 									<div class="description"><%= repos[i].description %></div>
 								<!-- <div class="stars"><%= repos[i].stars %></div>
 								<div class="forks"><%= repos[i].forks %></div> -->
-								
+
 							</div>
 						</a>
 					</div>
